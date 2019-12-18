@@ -1,0 +1,49 @@
+https://laravel.com/docs/5.7/redirects
+
+
+
+
+Route Redirect : 
+
+Route::get('dashboard', function () {
+    return redirect('home/dashboard');
+});
+
+
+
+Sometimes you may wish to redirect the user to their previous location, such as when a submitted form is invalid. You may do so by using the global back helper function. Since this feature utilizes the session, make sure the route calling the back function is using the web middleware group or has all of the session middleware applied:
+
+
+Route::post('user/profile', function () {
+    // Validate the request...
+
+    return back()->withInput();
+});
+
+
+Redirecting To Named Routes
+
+return redirect()->route('login');
+
+
+Redirecting To Controller Actions
+
+return redirect()->action('HomeController@index');
+
+
+Redirecting With Flashed Session Data
+
+
+Route::post('user/profile', function () {
+    // Update the user's profile...
+
+    return redirect('dashboard')->with('status', 'Profile updated!');
+});
+
+
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
+

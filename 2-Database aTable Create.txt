@@ -1,0 +1,146 @@
+Migrations in Laravel work as version control for a database. This feature allows us to modify and share application database schema right from the project files. We can generate migration with a single artisan command
+
+
+Create Table Using Migration: 
+
+
+1.)To Create Table Write Follow Command with your CMD
+
+	php artisan make:migration create_category_table
+
+	php artisan make:migration create_users_table --create=users
+
+	php artisan make:migration add_votes_to_users_table --table=users
+
+2.) It will create new migration file in database/migration folder.
+
+		 2019_01_31_043517_category_table.php
+		
+		Migration Command with Add Current DateTime Stamp
+
+3.)Now Define Follow Schema of Table
+
+ 	public function up()
+ 	   {
+        Schema::create('usermaster', function (Blueprint $table) {
+            $table->increments('user_id');
+            $table->string('user_name');
+            $table->string('user_email')->unique();
+            $table->bigInteger('Mobile');
+            $table->date('dob');
+      	    $table->decimal('amount', 8, 2);
+  	    $table->timestamp('created_at')->nullable();
+  	    $table->timestamp('updated_at')->nullable();
+
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('usermaster');
+    }
+
+
+Note: Up and Down Function Use
+	Up Function will Execute when you need to Add Field name in Table
+	Down Delete
+
+4.) Running Migrations using following command to create table in phpmyadmin
+
+php artisan migrate
+
+
+
+If you are running migration for the first time in an application, Laravel will also run its default migrations, i.e., users and password_resets table. Laravel also creates an extra table named migrations for its internal database version control.
+
+
+
+
+
+
+# Migration Roll Backs
+In case of error or inconsistency, we can all rollback (i.e remove) the migration tables from the actual database. This single artisan command can rollback the last batch of migrations. For example, for us, in last batch we migrated 3 tables (users, reset_passwords and posts).
+
+php artisan migrate:rollback
+
+
+We can also rollback the whole database of our application with:
+
+php artisan migrate:reset
+
+
+
+For advanced migrations where we may need to rollback the current(or old) migration and migrate the tables again, we can use:
+
+>php artisan migrate:refresh
+
+
+
+Steps Based : Rollback
+
+php artisan migrate:rollback --step=5
+
+
+
+Rename Table
+As you would have already guessed the rename() method of the Schema facade.
+
+Schema::rename($from, $to);
+Schema::rename($posts, $articles);
+ 
+
+
+Drop Table
+We can drop the existing table by simply calling drop() or dropIfExists method:
+
+Schema::drop('posts');
+Schema::dropIfExists('posts');
+
+
+
+
+# Table Columns
+
+Laravel supports all most all the datatypes that you would imagine using. A wide range of column types is available ranging from increments, integer, bigInteger, binary, boolean, char, date, dateTime, decimal, double, enum, float to ipAddress, json, longText, rememberToken, softDeletes, string, text, timestamps, etc.
+
+
+Rename Column
+To rename the column, we can use the renameColumn() method of the schema builder.
+
+
+Schema::table('posts', function (Blueprint $table) {
+  $table->renameColumn('from', 'to');
+});
+
+
+Drop Column
+To drop a column from the database, we can use dropColumn() the same way as renameColumn(). Also, we can drop multiple columns at once using:
+
+Schema::table('posts', function (Blueprint $table) {
+  $table->dropColumn(['comments', 'views', 'category']);
+});
+
+
+
+
+# Creating Primary Key & Indexes
+Laravel Schema Builder supports various types of indexes like: primary key, foreign key, unique, index, spatial index. Here are some examples:
+
+Schema::table('users', function (Blueprint $table) {
+  $table->primary('id');
+  $table->string('title')->unique();
+});
+
+
+
+
+Field Name and Datatype:
+
+https://laravel.com/docs/5.7/migrations#creating-columns
+
+

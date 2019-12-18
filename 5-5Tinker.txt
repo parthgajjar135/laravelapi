@@ -1,0 +1,61 @@
+What is Tinker?
+
+Tinker is a REPL(read-eval-print loop). REPL allows you to interact with your application through command-line. It’s commonly used for making simple database changes.
+
+Using Tinker, we can write actual PHP code through command-line. For instance, you need to add dummy data in your database table and you don’t have access to the database. In such case, you can insert data through Tinker. We can even update, delete table records in the database.
+
+
+First Create Migration File of Product Table
+Add 
+id
+name
+Description
+
+
+Migrate it.
+
+
+Make Model : 
+
+php artisan make:model Product
+
+
+
+
+To start Tinker run the following command in the terminal.
+
+>php artisan tinker
+
+You will get to see a similar output on your screen.
+
+Psy Shell v0.9.9 (PHP 7.3.0 — cli) by Justin Hileman
+>>>
+
+So, we get the >>> prompt with a blinking cursor waiting for us to enter some command.
+ 
+$p = new App\Product;
+$p->name = 'Test Product';
+$p->description = 'Test Product Body';
+$p->save();
+
+
+Write First Line then  Press Enter then Start Write Second Line
+
+
+Get Data : 
+product::limit(10)->get(); 
+
+product::get(); 
+
+
+Find data 
+$p = App\Product::get();
+
+
+Find data 
+$p = App\Product::find(1); //here '1' is the product id
+$p->delete();
+
+
+Note: To come out of the Tinker from command-line type ‘Exit’ and press Enter.
+

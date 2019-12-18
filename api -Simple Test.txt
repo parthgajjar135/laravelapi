@@ -1,0 +1,98 @@
+Create new Project 
+Create Table 
+Create Model
+
+Now Create New Controller named myapicontroller
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\Product;
+class myapicontroller extends Controller
+{
+    
+    public function staticdemo1()
+    {
+        $productdata  = [
+            "id" => "1",
+            "name" => "iPhone",
+            "price" => "85000",
+          ];
+    
+          return response()->json($productdata);
+    }
+
+    public function staticdemo2()
+    {
+        $productdata  = [
+            "id" => "1",
+            "name" => "iPhone",
+            "price" => "85000",
+          ];
+        $response = [
+            'success' => true,
+            'message' => "Record Found",
+            'data' => $productdata,
+            ];
+            return response()->json($response, 200);
+    }
+
+    public function dynamicdemo1()
+    {
+        $productarray = Product::all();
+        return response()->json($productarray);
+    }
+
+    public function dynamicdemo2($id)
+    {
+        $productarray =  Product::where('product_id',  $id)->first();
+        return response()->json($productarray);
+    }
+}
+
+
+
+
+api.php
+
+
+Route::get('/apidemo', function () {
+    $productdata  = [
+        "id" => "1",
+        "name" => "iPhone",
+        "price" => "85000",
+      ];
+
+      return response()->json($productdata);
+});
+ 
+Route::get('apidemo1', 'myapicontroller@staticdemo1');
+Route::get('apidemo2', 'myapicontroller@staticdemo2');
+Route::get('apidemo3', 'myapicontroller@dynamicdemo1');
+Route::get('apidemo4/{id}', 'myapicontroller@dynamicdemo2');
+ 
+
+http://127.0.0.1:8000/api/apidemo1
+
+
+----------------------
+Add API
+----------------------
+use Illuminate\Support\Facades\DB;
+
+
+    public function adddemo (Request $request)
+    {
+        $productname = $request->get('txt1');
+        $productdetails = $request->get('txt2');
+        $productarray =  DB::table('products')->insert(
+            ['name' => $productname, 'price' => $productdetails ]
+        );
+        return response()->json($productarray);
+    }
+
+
+Route::post('adddemo', 'mycontroller@adddemo');

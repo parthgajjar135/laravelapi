@@ -1,0 +1,101 @@
+Get Post Method Laravel
+-----------------------
+1.)Create New Controller 
+
+	php artisan make:controller myform
+
+It will Create New File in app->controller->myform.php
+
+2.)Create New View for MyForm
+	
+	goto->Resources->views
+	
+	Create new file form.blade.php
+
+3.) Design Form With HTML Controls in form.blade.php
+
+Goto Resource->Views->Create New File named form.blade.php
+
+<form method="post" action="{{URL::to('/formprocess')}}">
+
+{{ csrf_field() }}
+Name :	<input type="text" name="name">
+Gender : <input type="text" name="gender">
+Age :	<input type="text" name="age">
+
+<input type="submit" name="">
+
+</form>
+
+4.) Now goto Controller File (File Automatically Created Using Command)
+
+	app->http->controller->myform.php
+
+5.)Create one index() to Call ViewFile in Controller and Show() to Display data in myform.php controller file.
+
+
+	class myform extends Controller
+	{
+    
+		//to Load Design of my form
+ 		  public function index()
+  	 	 {
+    			return view('form');
+  	 	 }
+
+		//Process of Form
+		public function show(request $request)
+   		{
+
+   		//return "Hello Show";
+
+
+		//Print All Controls Value for Debug Purpose 
+		//print_r($request->input());
+
+		 //print_r($request->input('name'));
+   		//print_r($request->input('gender'));
+   		 //print_r($request->input('age'));
+   	 	//print_r($request->input());
+
+		$name = $request->input('name');
+		$gender = $request->input('gender');
+		$age = $request->input('age');
+
+		echo "My Name is $name <br/>Gender is $gender <br/>Age 		is $age";
+   
+  		 }
+
+
+	}
+
+
+
+
+6.) Now define route
+
+	goto->routes->web.php
+
+	i)First Route to Dipaly Form Design Page
+
+		Route::get('/form', 'myform@index')->name('index');
+
+	ii)Second Router for Processing Form Data with Post Method
+
+		Route::post('/formprocess','myform@show')->name('show');
+
+	Above Route Will Render Controller data with post method.
+ 
+7.)Now Run Project
+
+http://localhost/hellolaravel/public/form  get method
+Submit Event
+http://localhost/hellolaravel/public/formprocess post method 
+
+
+
+What is CSRF ? 
+
+CSRF stands for Cross-Site Request Forgery.
+
+In this case, Laravel is requiring this field to be sent with the request so that it can verify the request is not a forgery when posted back.

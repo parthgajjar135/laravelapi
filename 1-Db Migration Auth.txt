@@ -1,0 +1,86 @@
+DB Migration 
+Core PHP Problem:
+Daily Backup of Tables
+Share DB With Other
+One Field Add Issue 
+
+
+1.)First Create Database in PHPMyAdmin
+
+	mylaravel
+	
+2.)Now go to ENV File and Set your Database Name ,Username and password.	
+	
+	dbname   : mylaravel
+	username : root
+	password :
+
+3.) Now to Implement Migration of Database (Login) type following command
+
+	php artisan migrate 
+
+4.)Above command with Create 3 Tables
+	users	
+	migrations	
+	password_resets	
+	failed_jobs	
+5.)Note : By Default Laravel has create model of 4 tables by implementing this command it will excure script for table creation.	
+
+6.)Sucessfully it will create 4 table in PHPMyAdmin
+
+7.) Download Laravel Login UI Using Below Code. 
+
+	composer require laravel/ui 
+
+8.) Implement Login Auth Design in Project 
+	
+	php artisan ui:auth
+
+9.)Now its time to implement Authentication write below command 
+
+
+One of the best features of Laravel is its Authentication component. Almost everything required for authentication is configured by Laravel which is available in each Laravel application out of the box. We can create a working authentication model with a single artisan command. You can try and create a fresh laravel application before running this command:
+
+
+	php artisan make:auth
+
+
+
+All the configuration relating to authentication are stored in config/auth.php file. All the authentication route, controller, layout views, database migrations and models are available in all the Laravel application (of course, unless we manually delete). You can always pause and have a look at these files in your project for better understanding.
+
+11.)Now you will get an option of Signup and Login in Laravel Default page.
+
+
+Quetion : From where this file will execute ?
+
+12) By Default code already provided by Laravel 
+
+
+HTtp:
+Controller
+	Auth
+		Controller
+
+
+
+
+# Retrieving Authenticated User
+
+
+We can access the authenticated user with the help of Auth facade.
+
+use Illuminate\Support\Facades\Auth;
+
+$user = Auth::user();
+
+
+
+We can also validate whether the current user is authenticated or not by using the check method on Auth facade. It returns a boolean value as a result:
+
+use Illuminate\Support\Facades\Auth;
+
+if (Auth::check()) {
+    // logic if logged in
+}
+
+

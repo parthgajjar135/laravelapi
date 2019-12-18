@@ -1,0 +1,55 @@
+Creating cookies in Laravel we use Cookie::make() method and for reading cookie we use Cookie::get() method. Basically the Cookie::get() method is a wrapper over Request::cookie().
+
+All cookies created by the Laravel framework are encrypted and signed with an authentication code, meaning they will be considered invalid if they have been changed by the client.
+
+Creating a new Cookie
+
+$cookie = Cookie::make($name, $value, $minutes, $path, $domain,$secure, $httpOnly);
+
+
+Creating A Cookie That Lasts Forever
+
+
+$cookie = Cookie::forever('name', 'value');
+
+To create a cookie that won’t expire for 60 minutes
+
+
+$cookie = Cookie::make('name', 'value',60);
+
+
+To create a cookie that will expire on browser close
+
+
+$cookie = Cookie::make('name', 'value');
+
+
+
+
+Retrieving Cookie
+cookie::get() method will return null if cookie not present with the given name and you can pass a default value as a second parameter.
+
+16:48 01-10-2019
+ 
+$name = Cookie::get('cookieName', 'defaultValue');
+
+
+Delete Cookie
+
+For deleting cookies we use Cookie::forget() method as shown below,remember you have to always return the cookie with the response.
+
+$cookie = Cookie::forget('cookieName');
+ 
+return Response::make('test')->withCookie($cookie);
+
+
+
+Task : 
+
+1.)Create One Form with Textbox on Button Click Create One Cookie and Redirect to Second Page and Display Cookie Value 
+On Logout Button Delete Cookie
+
+2.)Take one Textbox and Button.
+	Enter Color Name and Save it on Cookie 
+On Loading of Page Check Cookie is Set or not If Cookie is Set Display Color name Which is Present in Cookie Using Css Background Color Property .,
+

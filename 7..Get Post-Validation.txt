@@ -1,0 +1,161 @@
+There are 2 Type of Validation : 
+Client Side 
+	Using Javascript/Jquery 
+	User can Disable Javascript and by Pass Validation 
+	Execution will done by  Browser 
+Server Side 
+	Using Server Code (PHP Code)
+	Secure no one can bypass validation.
+	It will Execute on Server Only.
+
+Always use both validation  to Create Professional Website 
+
+Get Post Method Laravel
+-----------------------
+1.)Create New Controller 
+
+	php artisan make:controller myform
+
+2.)Create New View for MyForm
+	
+	goto->Resources->views
+	
+	Create new file form.blade.php
+
+3.) Design Form With HTML Controls
+
+
+
+
+
+
+<ul>
+		@foreach($errors->all() as $error123)
+			<li style="color:red"> {{$error123}} </li>
+		@endforeach
+</ul>
+
+<form method="post" action="{{URL::to('/formprocess')}}">
+
+	<input type="hidden" name="_token" value="{{ csrf_token() }}">
+	Name <input type="text" name="name">
+
+Specific Error Message on Textbox 
+
+@if ($errors->has('name'))
+    <div class="error" style='color:red;'>{{ $errors->first('name') }}</div>
+@endif
+
+	SurName <input type="text" name="surname">
+	Email <input type="text" name="email">
+	Password <input type="password" name="password">
+	CPassword <input type="password" name="confirmpassword">
+	File <input type="File" name="avatar">
+	Mobile <input type="text" name="mobile">
+	StartDate : <input type="date" name="startdate">
+
+	<input type="submit" name="">
+
+</form>
+
+
+
+
+4.) Now goto Controller File
+
+	app->http->controller->myform.php
+
+5.)Create one index() to Call ViewFile in Controller and Show() to Display data.
+
+
+	class myform extends Controller
+	{
+    
+ 		   public function index()
+  	 	 {
+    			return view('form');
+  	 	 }
+
+		public function show(request $request)
+   		{
+
+   		 //print_r($request->input('name'));
+
+		$request->validate([
+		'name' => 'required | min:3 | numeric',
+		'surname' => 'required',
+		'password' => 'required ',
+		'confirmpassword' => 'same:password',
+		'email' => 'required | email',
+		'avatar' => 'dimensions:min_width=100,min_height=200 | file',
+		'mobile' => 'digits:10',
+		'startdate' => 'required|date|after:tomorrow',
+		]
+		);
+			$name = $request->input('name');
+			echo "My Name is $name";
+   
+  		 }
+
+
+	}
+
+
+
+
+6.) Now define route
+
+	goto->routes->web.php
+
+	i)First Route to Dipaly Form Design Page
+
+		Route::get('/form', 'myform@index')->name('index');
+
+	ii)Second Router for Processing Form Data with Post Method
+
+		Route::post('/formprocess','myform@show')->name('show');
+
+	Above Route Will Render Controller data with post method.
+ 
+7.)Now Run Project
+
+http://localhost/hellolaravel/public/form
+	Submit Event
+http://localhost/hellolaravel/public/formprocess
+
+
+Validation Link : 
+https://laravel.com/docs/5.7/validation
+
+
+
+
+
+In the second way, to print the error message after each field. In that case, our code is as follows:
+
+
+
+
+<div class="form-group">
+   <label for="exampleInputTitle">Post Title</label>
+   <input type="text" name="title" id="exampleInputTitle" />
+   @if ($errors->has('title'))
+       <span class="error">
+           {{ $errors->first('title') }}
+       </span>
+   @endif
+ 
+</div>
+<div class="form-group">
+   <label for="exampleInputBody">Post Body</label>
+   <textarea class="form-control" name="body" id="exampleInputBody" rows="10"></textarea>
+   @if ($errors->has('body'))
+       <span class="error">
+           {{ $errors->first('body') }}
+       </span>
+   @endif
+</div>
+
+
+
+Notice we are using @if ($errors->has('title')) to check if ‘title’ field has a validation error. If this field has error then we print it using {{ $errors->first('title') }}. 

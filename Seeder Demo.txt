@@ -1,0 +1,74 @@
+
+
+php artisan make:seeder UsersTableSeeder
+
+
+
+Once above command will be executed successfully then you will get "UsersTableSeeder" class in database/seeds directory, All the seeders class generated with artisan command will be place in the database/seeds directory.
+
+There will be only one method in seeder class by default :run.
+
+
+<?php
+use Illuminate\Database\Seeder;
+class UsersTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('users')->insert([
+            'name' => str_random(6),
+            'email' => strtolower(str_random(6)).'@gmail.com',
+            'password' => bcrypt('test@123')
+        ]);
+    }
+}
+
+
+
+
+The above code will insert one record at a time, If you need to insert in bulk then put the code into a loop.
+
+Now run the following command to seed the data :
+
+
+php artisan db:seed --class=UsersTableSeeder
+
+
+
+When you run the artisan command with db:seed option without specifying any class, then this will run the DatabaseSeeder class.
+
+
+
+You can break seeders into multiple files and call them in default "DatabaseSeeder" class by using call method. call method is used to call additional seed class.
+
+
+
+DatbaseSeeder.php
+
+
+<?php
+use Illuminate\Database\Seeder;
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $this->call(UsersTableSeeder::class);
+    }
+}
+
+
+
+Now you can run following command:
+
+php artisan db:seed
+

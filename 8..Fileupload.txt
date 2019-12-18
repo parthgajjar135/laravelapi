@@ -1,0 +1,237 @@
+File Upload Laravel
+-----------------------
+0.)Create Folder named "upload"
+
+	storage->app->upload
+	File will be save in Storage folder
+
+Folder Will Save in Storage->App->public->upload
+
+1.)Create New Controller 
+
+	php artisan make:controller myform
+
+2.)Create New View for MyForm
+	
+	goto->Resources->views
+	
+	Create new file form.blade.php
+
+3.) Design Form With HTML Controls
+
+Make Sure Form has enctype="multipart/form-data" attribute.
+
+<ul>
+		@foreach($errors->all() as $error)
+			<li style="color:red"> {{$error}} </li>
+		@endforeach
+</ul>
+
+<form method="post" action="{{URL::to('/formprocess')}}" enctype="multipart/form-data">
+ 
+<input type="hidden" name="_token" value="{{ csrf_token() }}">
+Name : <input type="text" name="txt1">
+File : <input type="file" name="file123">
+
+<input type="submit" >
+
+</form>
+
+
+
+4.) Now goto Controller File
+
+	app->http->controller->myform.php
+
+5.)Create one index() to Call ViewFile in Controller and Show() to Display data.
+
+
+class myform extends Controller
+{
+    
+    public function index()
+    {
+    	return view('form');
+    }
+
+	public function show(request $request)
+   {
+
+   	   $request->validate([
+            'file123' => 'required'
+        ]);
+ 
+//Method 1
+	     //  $path = $request->file('file123')->store('upload');
+        // $request->file123->store('upload');
+		//echo "File Uploaded and Path is $path";
+
+//Method 2
+
+ 		 $fileName = "fileName".time().'.'.request()->file123->getClientOriginalExtension();
+    	  $request->file123->storeAs('upload',$fileName);
+   }
+
+}
+
+
+
+
+
+6.) Now define route
+
+	goto->routes->web.php
+
+	i)First Route to Dipaly Form Design Page
+
+		Route::get('/form', 'myform@index')->name('index');
+
+	ii)Second Router for Processing Form Data with Post Method
+
+		Route::post('/formprocess','myform@show')->name('show');
+
+	Above Route Will Render Controller data with post method.
+ 
+7.)Now Run Project
+
+http://localhost/hellolaravel/public/form
+	Submit Event
+http://localhost/hellolaravel/public/formprocess
+
+ 
+
+----------------
+
+
+Making Files Public
+-------------------
+As you can notice current files are uploaded to the storage directory which is not public by default. It’s the Laravel’s default settings to hide default file upload from user’s as a security perspective.
+
+
+Now, what if you want to upload your files, so that it will be visible to public?
+
+
+Above Code Will Automatically Create Upload Folder in Storage Folder.
+
+
+
+File Functions List
+--------------------
+
+Useful functions:
+The getClientOriginalName() method used to get the actual name of the file when it was uploaded.
+
+The getFilename() method used to get temporary file name given to our file on temporary location.
+
+The getRealPath() method used to get current location of uploaded file.
+
+The getClientSize() method used to get the size of the uploaded file in bytes.
+
+The getClientMimeType() method used to get the mime type of uploaded file.
+
+The getClientExtension() method used to get extension of uploaded file.
+
+The move() method used used to move uploaded file to target location.First parameter is the target or destination directory second parameter is name of the file.
+
+
+Delete File Functions List
+-------------------------
+Delete single file
+
+File::delete($filename);
+
+Delete Multiple file
+
+File::delete($file1, $file2, $file3)
+
+
+Delete an array of files
+
+
+ $files = array($file1, $file2);
+ File::delete($files);
+
+File::exists().
+
+
+
+Method 2 
+--------
+@extends('app')
+@section('content')
+ 
+    @if (Session::has("message"))
+       {{ Session::get("message") }}
+     @endif
+     <hr />
+ 
+    <form action="add" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit">
+    </form>
+ 
+@endsection
+
+-----------
+
+<?php
+ 
+namespace App\Http\Controllers;
+ 
+use App\Http\Controllers\Controller;
+use Input;
+use Validator;
+use Request;
+use Response;
+ 
+ 
+class UploadController extends Controller {
+ 
+    public function index() {
+        return view('uploads');
+    }
+ 
+    public function uploadFiles() {
+ 
+        // GET ALL THE INPUT DATA , $_GET,$_POST,$_FILES.
+        $input = Input::all();
+        
+        // VALIDATION RULES
+        $rules = array(
+            'file' => 'image|max:3000',
+        );
+    
+       // PASS THE INPUT AND RULES INTO THE VALIDATOR
+        $validation = Validator::make($input, $rules);
+ 
+        // CHECK GIVEN DATA IS VALID OR NOT 
+        if ($validation->fails()) {
+            return Redirect::to('/')->with('message', $validation->errors->first());
+        }
+        
+        
+           $file = array_get($input,'file');
+           // SET UPLOAD PATH 
+            $destinationPath = 'uploads'; 
+            // GET THE FILE EXTENSION
+            $extension = $file->getClientOriginalExtension(); 
+            // RENAME THE UPLOAD WITH RANDOM NUMBER 
+            $fileName = rand(11111, 99999) . '.' . $extension; 
+            // MOVE THE UPLOADED FILES TO THE DESTINATION DIRECTORY 
+            $upload_success = $file->move($destinationPath, $fileName); 
+        
+        // IF UPLOAD IS SUCCESSFUL SEND SUCCESS MESSAGE OTHERWISE SEND ERROR MESSAGE
+        if ($upload_success) {
+            return Redirect::to('/')->with('message', 'Image uploaded successfully');
+        } 
+    }
+ 
+}
+
+------
+Route::get('/', 'UploadController@index');
+Route::post('upload/add', 'UploadController@uploadFiles');
+
+
+
+
